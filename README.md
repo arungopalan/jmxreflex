@@ -3,6 +3,8 @@ jmxreflex
 
 A command line interface for calling methods exposed via JMX.
 
+Note that in the usage example below, JAVA_HOME should point to JDK and NOT JRE. tools.jar is included in JDK under libs directory.
+
 <pre>
 <code>
 usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.reflexactiongames.jmxreflex.JmxReflexMain <option>
