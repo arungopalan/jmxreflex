@@ -111,6 +111,9 @@ public class JmxReflexMain {
 
 	private static final void showHelp(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java -jar jmxreflex.jar", options);
+		formatter
+				.printHelp(
+						"java -cp \"$JAVA_HOME\\lib\\tools.jar:lib\\commons-cli-1.2:jmxreflex.jar\" com.reflexactiongames.jmxreflex.JmxReflexMain <options>",
+						options);
 	}
 }
