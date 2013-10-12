@@ -3,7 +3,6 @@ package com.reflexactiongames.jmxreflex;
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -33,8 +32,6 @@ public class JmxClient {
 		try {
 			connector = JMXConnectorFactory.connect(jmxServiceUrl);
 			MBeanServerConnection mbeanConn = connector.getMBeanServerConnection();
-			Set<ObjectName> beanSet = mbeanConn.queryNames(null, null);
-			System.out.println(beanSet);
 			ObjectName mbeanName = new ObjectName(beanName);
 			mbeanConn.invoke(mbeanName, methodName, params, null);
 
@@ -96,8 +93,7 @@ public class JmxClient {
 				try {
 					connector = JMXConnectorFactory.connect(url);
 					MBeanServerConnection mbeanConn = connector.getMBeanServerConnection();
-					Set<ObjectName> beanSet = mbeanConn.queryNames(null, null);
-					System.out.println(beanSet);
+
 					ObjectName mbeanName = new ObjectName(beanName);
 					mbeanConn.invoke(mbeanName, methodName, params, null);
 

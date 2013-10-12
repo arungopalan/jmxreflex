@@ -3,6 +3,7 @@ package com.reflexactiongames.jmxreflex;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
@@ -54,6 +55,11 @@ public class Main {
 		String url = null, pid = null, mainClassName = null, beanName = null, methodName = null;
 
 		int connectionParams = 0;
+
+		if (commandLine.hasOption("h")) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("java -jar jmxreflex.jar", options);
+		}
 
 		if (commandLine.hasOption("u")) {
 			url = commandLine.getOptionValue("u");
