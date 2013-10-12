@@ -3,7 +3,9 @@ jmxreflex
 
 A command line interface for calling methods exposed via JMX.
 
-usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.reflexactiongames.jmxreflex.JmxReflexMain <options>
+<pre>
+<code>
+usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.reflexactiongames.jmxreflex.JmxReflexMain <option>
  -a <arg>     A comma separated value of arguments to pass to the JMX
               method. Only string values are supported
  -b <arg>     The identifier for the mbean
@@ -17,3 +19,5 @@ usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.
               machine and was started by the same user. See JMX
               documentation for more detail.
  -u <arg>     The JMX URL to connect to
+</code>
+</pre>
