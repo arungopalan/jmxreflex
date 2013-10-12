@@ -21,11 +21,11 @@ public class JmxClient {
 		// All methods are static!
 	}
 
-	public static void invokeByPid(String pid, String beanName, String methodName, Object[] params) throws Exception {
-		invokeByMainClassOrPid(null, pid, beanName, methodName, params);
+	public static String invokeByPid(String pid, String beanName, String methodName, Object[] params) throws Exception {
+		return invokeByMainClassOrPid(null, pid, beanName, methodName, params);
 	}
 
-	public static void invokeByUrl(String url1, String beanName, String methodName, Object[] params) throws Exception {
+	public static String invokeByUrl(String url1, String beanName, String methodName, Object[] params) throws Exception {
 		JMXServiceURL jmxServiceUrl = new JMXServiceURL(url1);
 		JMXConnector connector = null;
 
@@ -33,7 +33,8 @@ public class JmxClient {
 			connector = JMXConnectorFactory.connect(jmxServiceUrl);
 			MBeanServerConnection mbeanConn = connector.getMBeanServerConnection();
 			ObjectName mbeanName = new ObjectName(beanName);
-			mbeanConn.invoke(mbeanName, methodName, params, null);
+			Object returnValue = mbeanConn.invoke(mbeanName, methodName, params, null);
+			return String.valueOf(returnValue);
 
 		} finally {
 			if (connector != null) {
@@ -46,12 +47,12 @@ public class JmxClient {
 		}
 	}
 
-	public static void invokeByMainClass(String mainClassName, String beanName, String methodName, Object[] params)
+	public static String invokeByMainClass(String mainClassName, String beanName, String methodName, Object[] params)
 			throws Exception {
-		invokeByMainClassOrPid(mainClassName, null, beanName, methodName, params);
+		return invokeByMainClassOrPid(mainClassName, null, beanName, methodName, params);
 	}
 
-	private static void invokeByMainClassOrPid(String mainClassName, String pid, String beanName, String methodName,
+	private static String invokeByMainClassOrPid(String mainClassName, String pid, String beanName, String methodName,
 			Object[] params) throws Exception {
 
 		if (mainClassName == null && pid == null) {
@@ -64,13 +65,9 @@ public class JmxClient {
 
 		List<VirtualMachineDescriptor> virtualMachineDescriptors = VirtualMachine.list();
 
-		boolean serverFound = false;
-
 		for (VirtualMachineDescriptor desc : virtualMachineDescriptors) {
 
 			if (desc.displayName().equals(mainClassName) || desc.id().equals(pid)) {
-
-				serverFound = true;
 
 				VirtualMachine virtualMachine = VirtualMachine.attach(desc);
 				Properties props = virtualMachine.getAgentProperties();
@@ -87,32 +84,13 @@ public class JmxClient {
 					assert connectorAddress != null;
 				}
 
-				JMXServiceURL url = new JMXServiceURL(connectorAddress);
-				JMXConnector connector = null;
+				return invokeByUrl(connectorAddress, beanName, methodName, params);
 
-				try {
-					connector = JMXConnectorFactory.connect(url);
-					MBeanServerConnection mbeanConn = connector.getMBeanServerConnection();
-
-					ObjectName mbeanName = new ObjectName(beanName);
-					mbeanConn.invoke(mbeanName, methodName, params, null);
-
-				} finally {
-					if (connector != null) {
-						try {
-							connector.close();
-						} catch (Exception e) {
-
-						}
-					}
-				}
 			}
 
 		}
 
-		if (!serverFound) {
-			throw new Exception("No server found");
-		}
+		throw new Exception("No server found.");
 
 	}
 
