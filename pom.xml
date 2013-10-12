@@ -76,7 +76,7 @@
 								used to specify that all needed libraries are found under lib/ directory. -->
 							<classpathPrefix>lib/</classpathPrefix>
 							<!-- Specifies the main class of the application -->
-							<mainClass>com.reflexactiongames.Main</mainClass>
+							<mainClass>com.reflexactiongames.jmxreflex.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

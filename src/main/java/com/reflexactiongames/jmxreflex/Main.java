@@ -4,49 +4,34 @@ import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
 public class Main {
 
-	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception {
 
 		// create Options object
 		Options options = new Options();
-		Option urlOption = OptionBuilder.withArgName("u").hasArg().withDescription("The JMX URL to connect to")
-				.create("u");
-		options.addOption(urlOption);
 
-		Option processIdOption = OptionBuilder
-				.withArgName("p")
-				.hasArg()
-				.withDescription(
-						"The process id of the Java process to connect to. "
-								+ "This can be done only if the java process is running on the same machine and was started by the same user. "
-								+ "See JMX documentation for more detail.").create("p");
-		options.addOption(processIdOption);
+		options.addOption("h", false, "Prints this help");
+		options.addOption("u", true, "The JMX URL to connect to");
+		options.addOption(
+				"p",
+				true,
+				"The process id of the Java process to connect to. "
+						+ "This can be done only if the java process is running on the same machine and was started by the same user. "
+						+ "See JMX documentation for more detail.");
+		options.addOption(
+				"c",
+				true,
+				"The main class identifying the process. If there multiple processes running with this mail class then the JMX method will be called on each instance.");
 
-		Option mainClassOption = OptionBuilder.withArgName("c").hasArg().withDescription("The name of the main class")
-				.create("c");
-		options.addOption(mainClassOption);
+		options.addOption("b", true, "The identifier for the mbean");
 
-		Option mbeanNameOption = OptionBuilder.withArgName("b").hasArg().withDescription("The name of the mbean")
-				.create("b");
-		options.addOption(mbeanNameOption);
+		options.addOption("m", true, "The method to invoke on the mbean");
 
-		Option methodNameOption = OptionBuilder.withArgName("m").hasArg()
-				.withDescription("The method to invoke on the mbean").create("m");
-		options.addOption(methodNameOption);
-
-		Option argumentsOption = OptionBuilder
-				.withArgName("a")
-				.hasArg()
-				.withDescription(
-						"A comma separated value of arguments to pass to the method. Only string values are supported")
-				.create("a");
-		options.addOption(argumentsOption);
+		options.addOption("a", true,
+				"A comma separated value of arguments to pass to the JMX method. Only string values are supported");
 
 		CommandLineParser parser = new BasicParser();
 
@@ -57,8 +42,8 @@ public class Main {
 		int connectionParams = 0;
 
 		if (commandLine.hasOption("h")) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("java -jar jmxreflex.jar", options);
+			showHelp(options);
+			return;
 		}
 
 		if (commandLine.hasOption("u")) {
@@ -77,26 +62,30 @@ public class Main {
 		}
 
 		if (connectionParams == 0) {
-			System.err.print("You must pass either URL, PID or Main class");
+			System.err.println("You must pass either URL, PID or Main class");
+			showHelp(options);
 			System.exit(1);
 		}
 
 		if (connectionParams > 1) {
-			System.err.print("Please pass only one option between URL, PID or Main class name.");
+			System.err.println("Please pass only one option between URL, PID or Main class name.");
+			showHelp(options);
 			System.exit(1);
 		}
 
 		if (commandLine.hasOption("b")) {
 			beanName = commandLine.getOptionValue("b");
 		} else {
-			System.err.print("Bean name is required");
+			System.err.println("Bean object name is required");
+			showHelp(options);
 			System.exit(1);
 		}
 
 		if (commandLine.hasOption("m")) {
-			beanName = commandLine.getOptionValue("m");
+			methodName = commandLine.getOptionValue("m");
 		} else {
-			System.err.print("Method name is required");
+			System.err.println("Method name is required");
+			showHelp(options);
 			System.exit(1);
 		}
 
@@ -118,5 +107,10 @@ public class Main {
 		} else {
 			JmxClient.invokeByUrl(url, beanName, methodName, params);
 		}
+	}
+
+	private static final void showHelp(Options options) {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("java -jar jmxreflex.jar", options);
 	}
 }
