@@ -33,6 +33,8 @@ public class JmxReflexMain {
 		options.addOption("a", true,
 				"A comma separated value of arguments to pass to the JMX method. Only string values are supported");
 
+		options.addOption("s", true, "A comma separated values of class names to identify the signature.");
+
 		CommandLineParser parser = new BasicParser();
 
 		CommandLine commandLine = parser.parse(options, args);
@@ -60,6 +62,12 @@ public class JmxReflexMain {
 			mainClassName = commandLine.getOptionValue("c");
 			connectionParams++;
 		}
+
+		String s = "";
+		if (commandLine.hasOption("s")) {
+			s = commandLine.getOptionValue("s");
+		}
+		String[] signature = s.split(",");
 
 		if (connectionParams == 0) {
 			System.err.println("You must pass either URL, PID or Main class");
@@ -101,11 +109,11 @@ public class JmxReflexMain {
 		}
 
 		if (mainClassName != null) {
-			JmxClient.invokeByMainClass(mainClassName, beanName, methodName, params);
+			JmxClient.invokeByMainClass(mainClassName, beanName, methodName, params, signature);
 		} else if (pid != null) {
-			JmxClient.invokeByPid(pid, beanName, methodName, params);
+			JmxClient.invokeByPid(pid, beanName, methodName, params, signature);
 		} else {
-			JmxClient.invokeByUrl(url, beanName, methodName, params);
+			JmxClient.invokeByUrl(url, beanName, methodName, params, signature);
 		}
 	}
 
