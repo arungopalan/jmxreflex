@@ -7,7 +7,9 @@ Note that in the usage example below, JAVA_HOME should point to JDK and NOT JRE.
 
 <pre>
 <code>
-usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.reflexactiongames.jmxreflex.JmxReflexMain <option>
+usage: java -cp
+            "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar"
+            com.reflexactiongames.jmxreflex.JmxReflexMain <options>
  -a <arg>     A comma separated value of arguments to pass to the JMX
               method. Only string values are supported
  -b <arg>     The identifier for the mbean
@@ -20,6 +22,8 @@ usage: java -cp "$JAVA_HOME\lib\tools.jar:lib\commons-cli-1.2:jmxreflex.jar com.
               be done only if the java process is running on the same
               machine and was started by the same user. See JMX
               documentation for more detail.
+ -s <arg>     A comma separated values of class names to identify the
+              signature.
  -u <arg>     The JMX URL to connect to
 </code>
 </pre>
