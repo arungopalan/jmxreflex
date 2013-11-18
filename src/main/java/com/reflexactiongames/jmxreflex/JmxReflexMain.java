@@ -107,6 +107,10 @@ public class JmxReflexMain {
 				params[index] = argument;
 			}
 		}
+		else {
+		    params = null;
+		    signature = null;
+		}
 
 		if (mainClassName != null) {
 			JmxClient.invokeByMainClass(mainClassName, beanName, methodName, params, signature);
